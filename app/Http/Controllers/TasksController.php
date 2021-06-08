@@ -42,15 +42,14 @@ class TasksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,$id)
+    public function store(Request $request)
     {
         $request->validate([
-            "content" => "required|max255",
-            
+            "content"=> "required|max10",
             ]);
         
         
-        $task = Task::findOrFail($id);
+        $task = new Task;
         $task->content = $request->content;
         $task->save();
 
@@ -102,7 +101,13 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-                $task = Task::findOrFail($id);
+        
+            $request->validate([
+            'content' => 'required|max:10',
+        ]);
+        
+            
+        $task = Task::findOrFail($id);
         // メッセージを更新
         $task->content = $request->content;
         $task->save();
