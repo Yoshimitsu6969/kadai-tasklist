@@ -15,6 +15,8 @@ class TasksController extends Controller
      */
     public function index()
     {
+        
+        
         $tasks = Task::paginate(25);
         
         return view("tasks.index",[
@@ -54,6 +56,7 @@ class TasksController extends Controller
         $task = new Task;
         $task -> status = $request->status;
         $task->content = $request->content;
+        
         $task->save();
 
         // トップページへリダイレクトさせる
