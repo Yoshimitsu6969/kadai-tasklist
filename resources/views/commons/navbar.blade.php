@@ -13,6 +13,7 @@
                 
                 @if (Auth::check())
 
+
                             {{-- ログアウトへのリンク --}}
                             <li class="dropdown-item">{!! link_to_route('logout.get', 'ログアウト') !!}</li>
                         </ul>

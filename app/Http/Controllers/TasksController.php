@@ -15,22 +15,38 @@ class TasksController extends Controller
      */
     public function index()
     {
-        
-        
-        $tasks = Task::paginate(25);
-        
+     $data = [];
+        if (\Auth::check()) { // 認証済みの場合
+            // 認証済みユーザを取得
+            $user = \Auth::user();
+            // ユーザの投稿の一覧を作成日時の降順で取得
+            // （後のChapterで他ユーザの投稿も取得するように変更しますが、現時点ではこのユーザの投稿のみ取得します）
+            $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(25);
+
+            $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
+  
         return view("tasks.index",[
             "tasks" => $tasks,
             ]);
+    }  
+    
+    else
+    {
+            // Welcomeビューでそれらを表示
+            return view('welcome', $data);
     }
-
+}
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        
         $task = new Task;
         
         return view("tasks.create",[
@@ -51,14 +67,15 @@ class TasksController extends Controller
             "content"=>'required|max:10',
             
             ]);
-        
-        
-        $task = new Task;
-        $task -> status = $request->status;
-        $task->content = $request->content;
-        
-        $task->save();
 
+       
+        $request->user()->tasks()->create([
+         'status' => $request -> status,
+        'content' => $request->content,
+        ]);
+              
+
+        
         // トップページへリダイレクトさせる
         return redirect('/');
     }
@@ -113,6 +130,8 @@ class TasksController extends Controller
             'content' => 'required|max:10',
         ]);
         
+        
+        
             
         $task = Task::findOrFail($id);
         // メッセージを更新
@@ -132,11 +151,13 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        $task = Task::findOrFail($id);
+        // idの値で投稿を検索して取得
+        $task = \App\Task::findOrFail($id);
         // メッセージを削除
-        $task->delete();
-
-        // トップページへリダイレクトさせる
+         if (\Auth::id() === $task->user_id) {
+            $task->delete();
+        }
+     
         return redirect('/');
     }
 }
