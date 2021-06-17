@@ -153,6 +153,7 @@ class TasksController extends Controller
     {
         // idの値で投稿を検索して取得
         $task = \App\Task::findOrFail($id);
+        
         // メッセージを削除
          if (\Auth::id() === $task->user_id) {
             $task->delete();

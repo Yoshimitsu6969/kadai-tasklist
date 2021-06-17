@@ -16,7 +16,7 @@
             <div class="text-center">
                 <h1>Welcome to the Tasklist</h1>
                 {{-- ユーザ登録ページへのリンク --}}
-                {!! link_to_route('signup.get', 'Sign up now!', [], ['class' => 'btn btn-lg btn-primary']) !!}
+                {!! link_to_route('signup.get', '新規作成', [], ['class' => 'btn btn-lg btn-primary']) !!}
             </div>
         </div>
     @endif

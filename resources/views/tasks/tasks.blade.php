@@ -14,7 +14,7 @@
                         <p class="mb-0">{!! nl2br(e($task->content)) !!}</p>
                     </div>
                     
-                                {!! Form::model($task, ['route' => 'tasks.store']) !!}
+                                
 
                       <div>
                         @if (Auth::id() === $task->user_id)
