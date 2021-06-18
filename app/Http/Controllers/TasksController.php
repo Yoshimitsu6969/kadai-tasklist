@@ -88,13 +88,15 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-                // idの値でメッセージを検索して取得
-        $task = Task::findOrFail($id);
-
-        // メッセージ詳細ビューでそれを表示
-        return view('tasks.show', [
-            'task' => $task,
-        ]);
+        // idの値でメッセージを検索して取得
+        $task = \App\Task::findOrFail($id);
+       // メッセージ詳細ビューでそれを表示
+         if (\Auth::id() === $task->user_id) {
+            // 自分のタスクであればタスク編集ページを表示する。
+            return view("tasks.show",['task' => $task]);
+        }
+        // 他人のタスク(それ以外)であればトップページへとリダイレクトさせる
+        return redirect('/');
 
     }
 
@@ -106,14 +108,19 @@ class TasksController extends Controller
      */
     public function edit($id)
     {
-                // idの値でメッセージを検索して取得
-        $task = Task::findOrFail($id);
+        // idの値で投稿を検索して取得
+        $task = \App\Task::findOrFail($id);
+        
+        
+         if (\Auth::id() === $task->user_id) {
+             
+        return view('tasks.edit', ['task' => $task]);
+        
+         }
+         return redirect('/');
 
-        // メッセージ編集ビューでそれを表示
-        return view('tasks.edit', [
-            'task' => $task,
-        ]);
     }
+    
 
     /**
      * Update the specified resource in storage.
